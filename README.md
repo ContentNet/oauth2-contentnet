@@ -27,8 +27,6 @@ $provider = new ContentNet\OAuth2\Client\Provider\ContentNet([
         'redirectUri' => 'http://your-redirect-uri',
 ]);
 
-$provider->testMode = true; // Allows you to work in ContentNet's Sandbox environment.
-
 if (isset($_GET['code']) && $_GET['code']) {
     $token = $this->provider->getAccessToken('authorizaton_code', [
             'code' => $_GET['code']
