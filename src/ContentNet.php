@@ -5,64 +5,72 @@ namespace ContentNet\OAuth2\Client\Provider;
 use League\OAuth2\Client\Entity\User as User;
 use League\OAuth2\Client\Provider\AbstractProvider as AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken as AccessToken;
+use Psr\Http\Message\ResponseInterface as ResponseInterface;
 
 /**
  * A client-side implementation of OAuth2 for ContentNet
  */
-final class ContentNet extends AbstractProvider
+class ContentNet extends AbstractProvider
 {
+    /*
+    abstract protected function createResourceOwner(array $response, AccessToken $token);
+     */
     /**
      * The domain used to prefix the URLs for OAuth calls.
      */
     protected $serverDomain = 'http://api.contentnet.com';
 
     /**
-     * Get the URL that this provider uses to begin authorization.
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function urlAuthorize() : String
+    protected function getDefaultScopes() : array
+    {
+        return ['charge'];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBaseAuthorizationUrl() : String
     {
         return $this->serverDomain . '/oauth?response_type=code';
     }
 
     /**
-     * Get the URL that this provider uses to request an access token.
-     *
-     * @return string
+     * {@inheritDoc}
      */
-    public function urlAccessToken() : String
+    public function getBaseAccessTokenUrl(array $params) : String
     {
         return $this->serverDomain . '/oauth';
     }
 
     /**
-     * Get the URL that this provider uses to request user details.
-     *
-     * @param AccessToken $token
-     * @return string
+     * {@inheritDoc}
      */
-    public function urlUserDetails(AccessToken $token) : String
+    public function getResourceOwnerDetailsUrl(AccessToken $token) : String
     {
         return sprintf('%s/api/v1/user/get?access_token=%s', $this->serverDomain, $token);
     }
 
     /**
-     * Given an object response from the server, process the user details into a User object.
-     *
-     * @param object $response
-     * @param AccessToken $token
-     * @return User
+     * {@inheritDoc}
      */
-    public function userDetails($response, AccessToken $token) : User
+    public function checkResponse(ResponseInterface $response, $data)
     {
-        $user = new User();
-        $user->exchangeArray([
-            'uid'   => isset($response->user_id) ? $response->user_id : null,
-            'name'  => isset($response->name) ? $response->name : null,
-            'email' => isset($response->email) ? $response->email : null
-        ]);
+        if (isset($data['error'])) {
+            throw new IdentityProviderException(
+                $this->parseErrorMessage($data),
+                $response->getStatusCode(),
+                $response
+            );
+        }
+    }
 
-        return $user;
+    /**
+     * {@inheritDoc}
+     **/
+    public function createResourceOwner(array $response, AccessToken $token)
+    {
+        return $response;
     }
 }

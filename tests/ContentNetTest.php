@@ -2,7 +2,7 @@
 
 namespace ContentNet\OAuth2\Client\Test\Provider;
 
-use ContentNet\OAuth2\Client\Provider\ContentNet as OauthProvider;
+use ContentNet\OAuth2\Client\Provider\ContentNet as ContentNet;
 use League\OAuth2\Client\Token\AccessToken as AccessToken;
 
 class AmazonTest extends \PHPUnit_Framework_TestCase
@@ -23,37 +23,37 @@ class AmazonTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider dpConfigs
      */
-    public function testUrlAuthorize($config, $results)
+    public function testGetBaseAuthorizationUrl($config, $results)
     {
-        $provider = new OauthProvider($config);
-        $this->assertEquals($results['authurl'], $provider->urlAuthorize());
+        $provider = new ContentNet($config);
+        $this->assertEquals($results['authurl'], $provider->getBaseAuthorizationUrl());
     }
 
     /**
      * @dataProvider dpConfigs
      */
-    public function testUrlAccessToken($config, $results)
+    public function testGetBaseAccessTokenUrl($config, $results)
     {
-        $provider = new OauthProvider($config);
-        $this->assertEquals($results['tokenurl'], $provider->urlAccessToken());
+        $provider = new ContentNet($config);
+        $this->assertEquals($results['tokenurl'], $provider->getBaseAccessTokenUrl([]));
     }
 
     /**
      * @dataProvider dpConfigs
      */
-    public function testUrlUserDetails($config, $results)
+    public function testGetResourceOwnerDetailsUrl($config, $results)
     {
-        $provider = new OauthProvider($config);
+        $provider = new ContentNet($config);
         $token = new AccessToken(['access_token' => 'abc']);
-        $this->assertEquals($results['userurl'] . 'abc', $provider->urlUserDetails($token));
+        $this->assertEquals($results['userurl'] . 'abc', $provider->getResourceOwnerDetailsUrl($token));
     }
 
     /**
      * @dataProvider dpConfigs
      */
-    public function testUserDetails($config, $results)
+    public function testCreateResourceOwner($config, $results)
     {
-        $provider = new OauthProvider($config);
+        $provider = new ContentNet($config);
         $token = new AccessToken(['access_token' => 'abc']);
         $response = [
             'user_id' => 1,
@@ -61,17 +61,8 @@ class AmazonTest extends \PHPUnit_Framework_TestCase
             'email'   => 'jane@example.com',
         ];
 
-        $user = $provider->userDetails((object) $response, $token);
-
-        $this->assertEquals($user->uid, $response['user_id']);
-        $this->assertEquals($user->name, $response['name']);
-        $this->assertEquals($user->email, $response['email']);
-
-        // test empty values
-        $user = $provider->userDetails((object) [], $token);
-        $this->assertNull($user->uid);
-        $this->assertNull($user->name);
-        $this->assertNull($user->email);
+        $user = $provider->createResourceOwner($response, $token);
+        $this->assertSame($user, $response);
     }
 
     public function dpConfigs()
