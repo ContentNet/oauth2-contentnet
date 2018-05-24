@@ -13,9 +13,6 @@ use Psr\Http\Message\ResponseInterface as ResponseInterface;
  */
 class ContentNet extends AbstractProvider
 {
-    /*
-    abstract protected function createResourceOwner(array $response, AccessToken $token);
-     */
     /**
      * The domain used to prefix the URLs for OAuth calls.
      */
