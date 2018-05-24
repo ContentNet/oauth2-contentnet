@@ -1,4 +1,9 @@
 <?php
+/**
+ * A client-side implementation of OAuth2 for ContentNet.
+ *
+ * @package ContentNet\OAuth2\Client\Provider
+ */
 
 namespace ContentNet\OAuth2\Client\Provider;
 
@@ -9,12 +14,12 @@ use League\OAuth2\Client\Token\AccessToken as AccessToken;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 
 /**
- * A client-side implementation of OAuth2 for ContentNet
+ * A client-side implementation of OAuth2 for ContentNet.
  */
 class ContentNet extends AbstractProvider
 {
     /**
-     * The domain used to prefix the URLs for OAuth calls.
+     * @var String $serverDomain The domain used to prefix the URLs for OAuth calls.
      */
     protected $serverDomain = 'https://api.contentnet.com';
 
@@ -52,6 +57,8 @@ class ContentNet extends AbstractProvider
 
     /**
      * {@inheritDoc}
+     *
+     * @throws IdentityProviderException if there is an error.
      */
     public function checkResponse(ResponseInterface $response, $data)
     {
