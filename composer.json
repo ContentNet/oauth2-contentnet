@@ -7,8 +7,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~4.5",
-        "satooshi/php-coveralls": "^2.0",
-        "squizlabs/php_codesniffer": "*"
+        "php-coveralls/php-coveralls": "*",
+        "squizlabs/php_codesniffer": "*",
+        "sensiolabs/security-checker": "^4.1"
     },
     "license": "MIT",
     "keywords": [
