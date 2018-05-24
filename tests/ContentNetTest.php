@@ -4,6 +4,7 @@ namespace ContentNet\OAuth2\Client\Test\Provider;
 
 use ContentNet\OAuth2\Client\Provider\ContentNet as ContentNet;
 use League\OAuth2\Client\Token\AccessToken as AccessToken;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException as IdentityProviderException;
 
 class AmazonTest extends \PHPUnit_Framework_TestCase
 {
@@ -63,6 +64,20 @@ class AmazonTest extends \PHPUnit_Framework_TestCase
 
         $user = $provider->createResourceOwner($response, $token);
         $this->assertSame($user, $response);
+    }
+
+    public function testCheckResponse()
+    {
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
+        $response->method('getStatusCode')
+                 ->will($this->returnValue(999));
+
+        $provider = new ContentNet($this->config);
+
+        $provider->checkResponse($response, []);
+
+        $this->setExpectedException(IdentityProviderException::class);
+        $provider->checkResponse($response, ['error' => 'foo']);
     }
 
     public function dpConfigs()

@@ -1,6 +1,5 @@
 {
     "name": "contentnet/oauth2-contentnet",
-    "version": "1.0.0",
     "description": "PHP OAuth2 client for ContentNet",
     "type": "library",
     "require": {

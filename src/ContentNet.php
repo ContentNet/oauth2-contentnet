@@ -4,6 +4,7 @@ namespace ContentNet\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Entity\User as User;
 use League\OAuth2\Client\Provider\AbstractProvider as AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException as IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken as AccessToken;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 
@@ -59,7 +60,7 @@ class ContentNet extends AbstractProvider
     {
         if (isset($data['error'])) {
             throw new IdentityProviderException(
-                $this->parseErrorMessage($data),
+                $data['error'],
                 $response->getStatusCode(),
                 $response
             );
