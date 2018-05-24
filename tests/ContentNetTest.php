@@ -81,8 +81,8 @@ class ContentNetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ContentNet::getDefaultScopes
-     * @covers ContentNet::getBaseAuthorizationUrl
+     * @covers ContentNet\OAuth2\Client\Provider\ContentNet::getDefaultScopes
+     * @covers ContentNet\OAuth2\Client\Provider\ContentNet::getBaseAuthorizationUrl
      * @dataProvider dpConfigs
      */
     public function testGetAuthorizationUrl($config, $results)
