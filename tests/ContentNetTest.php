@@ -6,7 +6,7 @@ use ContentNet\OAuth2\Client\Provider\ContentNet as ContentNet;
 use League\OAuth2\Client\Token\AccessToken as AccessToken;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException as IdentityProviderException;
 
-class AmazonTest extends \PHPUnit_Framework_TestCase
+class ContentNetTest extends \PHPUnit_Framework_TestCase
 {
     private $config = [
         'clientId'     => 'mock_client_id',
@@ -80,15 +80,28 @@ class AmazonTest extends \PHPUnit_Framework_TestCase
         $provider->checkResponse($response, ['error' => 'foo']);
     }
 
+    /**
+     * @covers ContentNet::getDefaultScopes
+     * @covers ContentNet::getBaseAuthorizationUrl
+     * @dataProvider dpConfigs
+     */
+    public function testGetAuthorizationUrl($config, $results)
+    {
+        $provider = new ContentNet($config);
+        $url = $provider->getAuthorizationUrl();
+        $baseUrl = $provider->getBaseAuthorizationUrl();
+        $this->assertRegexp("#\Q$baseUrl\E.*&scope=charge#", $url);
+    }
+
     public function dpConfigs()
     {
         return [
             [
                 $this->config,
                 [
-                    'authurl'  => 'http://api.contentnet.com/oauth?response_type=code',
-                    'tokenurl' => 'http://api.contentnet.com/oauth',
-                    'userurl'  => 'http://api.contentnet.com/api/v1/user/get?access_token=',
+                    'authurl'  => 'https://api.contentnet.com/oauth?response_type=code',
+                    'tokenurl' => 'https://api.contentnet.com/oauth',
+                    'userurl'  => 'https://api.contentnet.com/api/v1/user/get?access_token=',
                 ]
             ],
             [

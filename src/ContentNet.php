@@ -19,7 +19,7 @@ class ContentNet extends AbstractProvider
     /**
      * The domain used to prefix the URLs for OAuth calls.
      */
-    protected $serverDomain = 'http://api.contentnet.com';
+    protected $serverDomain = 'https://api.contentnet.com';
 
     /**
      * {@inheritDoc}
