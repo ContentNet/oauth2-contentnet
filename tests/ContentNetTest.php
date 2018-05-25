@@ -90,7 +90,10 @@ class ContentNetTest extends \PHPUnit_Framework_TestCase
         $provider = new ContentNet($config);
         $url = $provider->getAuthorizationUrl();
         $baseUrl = $provider->getBaseAuthorizationUrl();
-        $this->assertRegexp("#\Q$baseUrl\E.*&scope=charge#", $url);
+        $this->assertRegexp("#\Q$baseUrl?\E.*&scope=charge#", $url);
+
+        ## make sure only one response_type is added
+        $this->assertEquals(substr_count($url, 'response_type=code'), 1);
     }
 
     public function dpConfigs()
@@ -99,7 +102,7 @@ class ContentNetTest extends \PHPUnit_Framework_TestCase
             [
                 $this->config,
                 [
-                    'authurl'  => 'https://api.contentnet.com/oauth?response_type=code',
+                    'authurl'  => 'https://api.contentnet.com/oauth',
                     'tokenurl' => 'https://api.contentnet.com/oauth',
                     'userurl'  => 'https://api.contentnet.com/api/v1/user/get?access_token=',
                 ]
@@ -107,7 +110,7 @@ class ContentNetTest extends \PHPUnit_Framework_TestCase
             [
                 $this->sandboxConfig,
                 [
-                    'authurl'  => 'https://api-devex.contentnet.com/oauth?response_type=code',
+                    'authurl'  => 'https://api-devex.contentnet.com/oauth',
                     'tokenurl' => 'https://api-devex.contentnet.com/oauth',
                     'userurl'  => 'https://api-devex.contentnet.com/api/v1/user/get?access_token=',
                 ]

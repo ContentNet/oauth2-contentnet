@@ -36,7 +36,7 @@ class ContentNet extends AbstractProvider
      */
     public function getBaseAuthorizationUrl() : String
     {
-        return $this->serverDomain . '/oauth?response_type=code';
+        return $this->serverDomain . '/oauth';
     }
 
     /**
